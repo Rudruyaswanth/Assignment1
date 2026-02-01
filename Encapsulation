@@ -1,0 +1,76 @@
+package lpu;
+class BankAccount {
+    private int accountNumber;
+    protected double balance;
+    public BankAccount(int accountNumber, double balance) {
+        this.accountNumber = accountNumber;
+        this.balance = balance;
+    }
+    public void deposit(double amount) {
+        balance += amount;
+    }
+    public void withdraw(double amount) {
+        if (amount <= balance) {
+            balance -= amount;
+        } else {
+            System.out.println("Insufficient balance");
+        }
+    }
+    public int getAccountNumber() {
+        return accountNumber;
+    }
+
+    public String getAccountDetails() {
+        return "Account #" + accountNumber + ", Balance: $" + balance;
+    }
+}
+class SavingsAccount extends BankAccount {
+    private double interestRate;
+    public SavingsAccount(int accNo, double balance, double rate) {
+        super(accNo, balance);
+        this.interestRate = rate;
+    }
+    public void applyInterest() {
+        balance = balance + (balance * interestRate);
+    }
+    public String getAccountDetails() {
+        return "Savings Account #" + getAccountNumber()
+                + ", Balance: $" + balance
+                + ", Rate: " + (interestRate * 100) + "%";
+    }
+}
+class CheckingAccount extends BankAccount {
+
+    private double overdraftLimit;
+
+    public CheckingAccount(int accNo, double balance, double limit) {
+        super(accNo, balance);
+        this.overdraftLimit = limit;
+    }
+
+    public void withdraw(double amount) {
+        if (balance - amount >= -overdraftLimit) {
+            balance -= amount;
+        } else {
+            System.out.println("Overdraft limit exceeded");
+        }
+    }
+
+    public String getAccountDetails() {
+        return "Checking Account #" + getAccountNumber()
+                + ", Balance: $" + balance
+                + ", Limit: $" + overdraftLimit;
+    }
+}
+public class Main {
+    public static void main(String[] args) {
+
+        SavingsAccount sa = new SavingsAccount(12345, 1000, 0.02);
+        sa.applyInterest();
+        System.out.println(sa.getAccountDetails());
+
+        CheckingAccount ca = new CheckingAccount(67890, 100, 500);
+        ca.withdraw(150);
+        System.out.println(ca.getAccountDetails());
+    }
+}
