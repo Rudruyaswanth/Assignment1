@@ -1,0 +1,95 @@
+import java.util.ArrayList;
+class BankAccount {
+
+    private int accountNumber;
+    protected double balance;
+
+    public BankAccount(int accountNumber, double balance) {
+        this.accountNumber = accountNumber;
+        this.balance = balance;
+    }
+
+    public void deposit(double amount) {
+        balance += amount;
+    }
+
+    public void withdraw(double amount) {
+        if (amount <= balance) {
+            balance -= amount;
+        } else {
+            System.out.println("Insufficient balance");
+        }
+    }
+
+    public int getAccountNumber() {
+        return accountNumber;
+    }
+
+    public String getAccountDetails() {
+        return "Account #" + accountNumber + ", Balance: $" + balance;
+    }
+}
+class SavingsAccount extends BankAccount {
+
+    private double interestRate;
+
+    public SavingsAccount(int accNo, double balance, double rate) {
+        super(accNo, balance);
+        this.interestRate = rate;
+    }
+
+    public void applyInterest() {
+        balance = balance + (balance * interestRate);
+    }
+    public String getAccountDetails() {
+        return "Savings Account #" + getAccountNumber()
+                + ", Balance: $" + balance
+                + ", Rate: " + (interestRate * 100) + "%";
+    }
+}
+class CheckingAccount extends BankAccount {
+
+    private double overdraftLimit;
+
+    public CheckingAccount(int accNo, double balance, double limit) {
+        super(accNo, balance);
+        this.overdraftLimit = limit;
+    }
+    public void withdraw(double amount) {
+        if (balance - amount >= -overdraftLimit) {
+            balance -= amount;
+        } else {
+            System.out.println("Overdraft limit exceeded");
+        }
+    }
+    public String getAccountDetails() {
+        return "Checking Account #" + getAccountNumber()
+                + ", Balance: $" + balance
+                + ", Limit: $" + overdraftLimit;
+    }
+}
+public class BankManager {
+
+    public static void main(String[] args) {
+        ArrayList<BankAccount> accounts = new ArrayList<>();
+        SavingsAccount sa = new SavingsAccount(1111, 1000, 0.02);
+        CheckingAccount ca = new CheckingAccount(2222, 100, 500);
+        accounts.add(sa);
+        accounts.add(ca);
+        System.out.println("---- Account Details (Before) ----");
+        for (BankAccount acc : accounts) {
+            System.out.println(acc.getAccountDetails());
+        }
+        sa.deposit(200);          
+        ca.withdraw(100);         
+        for (BankAccount acc : accounts) {
+            if (acc instanceof SavingsAccount) {
+                ((SavingsAccount) acc).applyInterest();
+            }
+        }
+        System.out.println("\n---- Account Details (After) ----");
+        for (BankAccount acc : accounts) {
+            System.out.println(acc.getAccountDetails());
+        }
+    }
+}
