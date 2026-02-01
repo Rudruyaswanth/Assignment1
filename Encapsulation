@@ -1,0 +1,62 @@
+abstract class BankAccount {
+    private String accountNumber;
+    private String accountHolderName;
+    private double balance;
+    public BankAccount(String accountNumber, String accountHolderName) {
+        this.accountNumber = accountNumber;
+        this.accountHolderName = accountHolderName;
+        this.balance = 0.0;
+    }
+    public String getAccountNumber() {
+        return accountNumber;
+    }
+
+    public String getAccountHolderName() {
+        return accountHolderName;
+    }
+
+    public double getBalance() {
+        return balance;
+    }
+    public void deposit(double amount) {
+        if (amount > 0) {
+            balance += amount;
+        } else {
+            System.out.println("Deposit amount must be positive");
+        }
+    }
+    public void withdraw(double amount) {
+        if (amount > 0) {
+            if (amount <= balance) {
+                balance -= amount;
+            } else {
+                System.out.println("Insufficient balance");
+            }
+        } else {
+            System.out.println("Withdrawal amount must be positive");
+        }
+    }
+    public abstract String getAccountDetails();
+}
+class SavingsAccount extends BankAccount {
+
+    public SavingsAccount(String accNo, String name) {
+        super(accNo, name);
+    }
+    public String getAccountDetails() {
+        return "Savings Account [" + getAccountNumber() +
+               "] Holder: " + getAccountHolderName() +
+               ", Balance: $" + getBalance();
+    }
+}
+public class Main {
+    public static void main(String[] args) {
+
+        SavingsAccount sa = new SavingsAccount("SA101", "Ravi");
+
+        sa.deposit(500);
+        sa.withdraw(200);
+
+        System.out.println(sa.getAccountDetails());
+    }
+}
